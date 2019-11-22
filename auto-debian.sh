@@ -43,7 +43,7 @@ none="\033[0m"
   ----------------------------------------------------
   |      Auto Debian - Automatic Configuration       |
   |                  by senhan07                     |
-  |             Last Updated: 09/11/19               |
+  |             Last Updated: 22/11/19               |
   ----------------------------------------------------
   
 EOF
@@ -131,6 +131,7 @@ EOF
 				else 
 					echo ""
 					echo -e "  ${red}Invalid Drive Name${none}"
+					sleep 1
 					break
 				fi
 				mkdir -p /mnt/usb /mnt/disk1 /mnt/disk2 /mnt/disk3 
@@ -139,13 +140,15 @@ EOF
  				mount -o loop /mnt/usb/*2.iso /mnt/disk2
  				mount -o loop /mnt/usb/*3.iso /mnt/disk3
  				echo "
-deb file:///mnt/usb wheezy main contrib
-deb file:///mnt/disk1 wheezy main contrib
-deb file:///mnt/disk2 wheezy main contrib
-deb file:///mnt/disk3 wheezy main contrib" > /etc/apt/sources.list
+deb [trusted=yes] file:///mnt/usb wheezy main contrib
+deb [trusted=yes] file:///mnt/disk1 wheezy main contrib
+deb [trusted=yes] file:///mnt/disk2 wheezy main contrib
+deb [trusted=yes] file:///mnt/disk3 wheezy main contrib" > /etc/apt/sources.list
 				apt-get update;;
 		
-			"2") clear
+			"2") if grep -qs "$mountloc" /proc/mounts;
+				then 
+				 clear
 				 umount /mnt/disk1
  				 umount /mnt/disk2
  				 umount /mnt/disk3
@@ -191,14 +194,54 @@ deb file:///mnt/disk3 wheezy main contrib" > /etc/apt/sources.list
 				 echo "  -----------------------------------------------"
 				 echo "  EJECTING, PLEASE WAIT......"
 				 echo "  -----------------------------------------------"
-				 sleep 0.200;;
+				 sleep 0.200
+				 else 
+				 clear
+				 echo ""
+				 echo "  -----------------------------------------------"
+				 echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting'
+				 echo "  -----------------------------------------------"
+				 sleep 0.200
+				 clear
+				 echo ""
+				 echo "  -----------------------------------------------"
+				 echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting.'
+				 echo "  -----------------------------------------------"
+				 sleep 0.200
+				 clear
+				 echo ""
+				 echo "  -----------------------------------------------"
+				 echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting..'
+				 echo "  -----------------------------------------------"
+				 sleep 0.200
+				 clear
+				 echo ""
+				 echo "  -----------------------------------------------"
+				 echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting...'
+				 echo "  -----------------------------------------------"
+				 sleep 0.200
+				 clear
+				 echo ""
+				 echo "  -----------------------------------------------"
+				 echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting....'
+				 echo "  -----------------------------------------------"
+				 sleep 0.200
+				 clear
+				 echo ""
+				 echo "  -----------------------------------------------"
+				 echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting.....'
+				 echo "  -----------------------------------------------"
+				 sleep 0.200
+				 fi;;
 
-			"q") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"q") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 			"Q") clear 
 				 exit;;
 			"r") clear 
 				 break;;
-			"R") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"R") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 			esac
 			sleep 1
 		done;;
@@ -224,7 +267,9 @@ deb file:///mnt/disk3 wheezy main contrib" > /etc/apt/sources.list
 EOF
 		read -n1 -p $'  \e[5m\e[31mChoose:\e[0m '
 		case "$REPLY" in
-			"1") clear 
+			"1") if grep -qs "$mountloc" /proc/mounts;
+				then 
+				clear 
 				apt-get install bind9 -y --force-yes
 				clear
 				echo ""
@@ -236,6 +281,7 @@ EOF
 				else 
 					echo ""
 					echo -e "  ${red}Invalid Domain Name${none}"
+					sleep 1
 					break
 				fi
 				clear
@@ -248,6 +294,7 @@ EOF
 				else 
 					echo ""
 					echo -e "  ${red}Invalid IP Address${none}"
+					sleep 1
 					break
 				fi
 				clear
@@ -260,6 +307,7 @@ EOF
 				else 
 					echo ""
 					echo -e "  ${red}Invalid IP Address${none}"
+					sleep 1
 					break
 				fi
 				clear
@@ -272,6 +320,7 @@ EOF
 				else 
 					echo ""
 					echo -e "  ${red}Invalid IP Address${none}"
+					sleep 1
 					break
 				fi
 				clear
@@ -284,6 +333,7 @@ EOF
 				else 
 					echo ""
 					echo -e "  ${red}Invalid IP Address${none}"
+					sleep 1
 					break
 				fi
 				clear
@@ -354,13 +404,72 @@ nameserver 1.0.0.1" > /etc/resolv.conf
 					"n") break;;
 					esac
 					sleep 1
-				done;;
+				done
+				else
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting...'
+					sleep 0.50
+				fi;;
+				 
+				
 			
-			"U") clear
-				 apt-get purge bind9 -y
-				 apt-get autoremove -y;;
+			"U") if [ $(dpkg-query -W -f='${Status}' bind9 2>/dev/null | grep -c "ok installed") -eq 0 ];
+				 then
+					clear
+					echo ""
+					echo $'  Bind9 \e[31mNot Installed\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Bind9 \e[31mNot Installed\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Bind9 \e[31mNot Installed\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Bind9 \e[31mNot Installed\e[0m, Exiting...'
+					sleep 0.50
+				 else
+					clear
+					apt-get purge bind9 -y
+					apt-get autoremove -y
+				 fi;;
 			
-			"2")clear
+			"2")if [ $(dpkg-query -W -f='${Status}' bind9 2>/dev/null | grep -c "ok installed") -eq 0 ];
+				 then
+					clear
+					echo ""
+					echo $'  Bind9 \e[31mNot Installed\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Bind9 \e[31mNot Installed\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Bind9 \e[31mNot Installed\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Bind9 \e[31mNot Installed\e[0m, Exiting...'
+					sleep 0.50
+				else
+				clear
 				echo ""
 				echo "  DOMAIN NAME SERVER (DNS) - ADD SUBDOMAINS"
 				echo "  -----------------------------------------------------------"
@@ -370,6 +479,7 @@ nameserver 1.0.0.1" > /etc/resolv.conf
 				else 
 					echo ""
 					echo -e "  ${red}Invalid Domain Name${none}"
+					sleep 1
 					break
 				fi
 				 clear
@@ -382,6 +492,7 @@ nameserver 1.0.0.1" > /etc/resolv.conf
 				else 
 					echo ""
 					echo -e "  ${red}Invalid IP Address${none}"
+					sleep 1
 					break
 				fi
 				clear
@@ -394,6 +505,7 @@ nameserver 1.0.0.1" > /etc/resolv.conf
 				 else 
 					echo ""
 					echo -e "  ${red}Invalid IP Address${none}"
+					sleep 1
 					break
 				 fi
 				 clear
@@ -406,6 +518,7 @@ nameserver 1.0.0.1" > /etc/resolv.conf
 				else 
 					echo ""
 					echo -e "  ${red}Invalid IP Address${none}"
+					sleep 1
 					break
 				fi
 				 clear
@@ -418,6 +531,7 @@ nameserver 1.0.0.1" > /etc/resolv.conf
 				else 
 					echo ""
 					echo -e "  ${red}Invalid IP Address${none}"
+					sleep 1
 					break
 				fi
 				 clear
@@ -449,15 +563,19 @@ nameserver 1.0.0.1" > /etc/resolv.conf
 				 	"n") break;;
 				 	esac
 				 	sleep 1
-				 done;;
+				 done
+				 fi;;
 				 
-			"q") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"q") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 			"Q") clear
 				 exit;;
 			"r") clear 
 				 break;;
-			"u") echo $' \e[7mCASE SENSITIVE\e[0m';;
-			"R") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"u") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
+			"R") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 			esac
 			sleep 1
 		done;;
@@ -487,22 +605,89 @@ EOF
   
 		read -n1 -p $'  \e[5m\e[31mChoose:\e[0m '
 		case "$REPLY" in
-			"1") clear
+			"1") if grep -qs "$mountloc" /proc/mounts;
+				then 
+				 clear
 				 apt-get install apache2 apache2.2-common php5 libapache2-mod-php5 -y --force-yes
-				 /etc/init.d/apache2 status;;
-			"U") clear
+				 /etc/init.d/apache2 status
+				 else
+				 	clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting...'
+					sleep 1
+					fi;;
+			"U") if [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ];
+				 then
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting...'
+					sleep 1
+				 else
+				 clear
 				 apt-get purge apache* -y
 				 apt-get purge php5 -y
-				 rm -r /etc/apache2;;
-			"2") clear
+				 rm -r /etc/apache2
+				 fi;;
+			"2") if [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ];
+				 then
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting...'
+					sleep 1
+				 else
+				 clear
 				 a2enmod ssl
 				 mkdir -p /etc/apache2/ssl
 				 mkdir -p /var/ftp
 				 clear
 				 echo ""
-				 echo "  WEB SERVER - SSL CERTIFICATE"
-				 echo "  -----------------------------------------------------------"
-				 read -p $'  Enter the Domain Names (ex. \e[5m\e[31mdomain.com\e[0m): ' apachedns
+				 echo "  SSL CERTIFICATE - SETUP"
+				echo "  -----------------------------------------------------------"
+				read -p $'  Enter the Domain Names (ex. \e[5m\e[31mdomain.com\e[0m): ' apachedns
+				if [[ $apachedns =~ ^([a-zA-Z0-9](([a-zA-Z0-9-]){0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$ ]];then
+					binddns="$binddns"
+				else 
+					echo ""
+					echo -e "  ${red}Invalid Domain Name${none}"
+					sleep 1
+					break
+				fi
 				 echo "
 [req]
 distinguished_name = req_distinguished_name
@@ -521,7 +706,8 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 [alt_names]
 DNS.1 = $apachedns
-DNS.2 = *.$apachedns" > /etc/apache2/req.cnf
+DNS.2 = www.$apachedns
+DNS.3 = *.$apachedns" > /etc/apache2/req.cnf
 				 clear
 				 openssl req -x509 -nodes -days 1 -newkey rsa:2048 -keyout /etc/apache2/ssl/ca.key -out /etc/apache2/ssl/ca.pem -config /etc/apache2/req.cnf -sha256
 				 openssl x509 -outform der -in /etc/apache2/ssl/ca.pem -out /var/ftp/SSL-CERTIFICATE.crt
@@ -576,8 +762,28 @@ DNS.2 = *.$apachedns" > /etc/apache2/req.cnf
 </IfModule>
 " > /etc/apache2/sites-available/default-ssl
 			a2ensite default-ssl
-			/etc/init.d/apache2 restart;;
-			"3") while : 
+			/etc/init.d/apache2 restart
+			fi;;
+			"3") if [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ];
+				 then
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Apache2 \e[31mNot Installed\e[0m, Exiting...'
+					sleep 1
+				 else
+			while : 
 		do 
 		clear
 		cat<<EOF
@@ -606,6 +812,7 @@ EOF
 				else 
 					echo ""
 					echo -e "  ${red}Invalid Domain Name${none}"
+					sleep 1
 					break
 				fi
 				  echo "
@@ -659,6 +866,7 @@ RewriteRule ^ ftp://%{SERVER_NAME}%{REQUEST_URI}
 				else 
 					echo ""
 					echo -e "  ${red}Invalid Domain Name${none}"
+					sleep 1
 					break
 				fi
 				  echo "
@@ -712,6 +920,7 @@ RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI}
 				else 
 					echo ""
 					echo -e "  ${red}Invalid Domain Name${none}"
+					sleep 1
 					break
 				fi
 				  echo "
@@ -757,24 +966,31 @@ RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI}
 				  clear
 				  /etc/init.d/apache2 restart;;
 
-			"q") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"q") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 			"Q") clear 
 				 exit;;
 			"r") clear 
 				 break;;
-			"u") echo $' \e[7mCASE SENSITIVE\e[0m';;
-			"R") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"u") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
+			"R") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 			esac
 			sleep 0.050
-		done;; 
+		done
+		fi;; 
 		
-		"q") echo $' \e[7mCASE SENSITIVE\e[0m';;
+		"q") echo $' \e[7mCASE SENSITIVE\e[0m'
+			sleep 1;;
 			"Q") clear
 				 exit;;
 			"r") clear 
 				 break;;
-			"u") echo $' \e[7mCASE SENSITIVE\e[0m';;
-			"R") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"u") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
+			"R") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 		esac
 		sleep 0.050
 	done;; 
@@ -798,7 +1014,9 @@ RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI}
 EOF
 		read -n1 -p $'  \e[5m\e[31mChoose:\e[0m '
 		case "$REPLY" in
-			"1") clear
+			"1") if grep -qs "$mountloc" /proc/mounts;
+				then 
+				 clear
 				 mkdir -p /var/ftp
 				 fallocate -l 50M /var/ftp/dummy.file
 				 apt-get install proftpd -y --force-yes
@@ -813,6 +1031,7 @@ EOF
 				else 
 					echo ""
 					echo -e "  ${red}Invalid Domain Name${none}"
+					sleep 1
 					break
 				fi
 		echo "
@@ -1007,19 +1226,60 @@ AdminControlsEngine off
 Include /etc/proftpd/conf.d/
 " > /etc/proftpd/proftpd.conf
 	clear
-	/etc/init.d/proftpd restart;;
-			"U") clear
+	/etc/init.d/proftpd restart
+	else
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting...'
+					sleep 0.50
+					fi;;
+			"U") if [ $(dpkg-query -W -f='${Status}' proftpd-* 2>/dev/null | grep -c "ok installed") -eq 0 ];
+				 then
+					clear
+					echo ""
+					echo $'  Proftpd \e[31mNot Installed\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Proftpd \e[31mNot Installed\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Proftpd \e[31mNot Installed\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Proftpd \e[31mNot Installed\e[0m, Exiting...'
+					sleep 0.50
+				 else
+				 clear
 				 apt-get purge proftpd-* -y
 				 apt-get autoremove -y
-				 rm -r /var/ftp;;
+				 rm -r /var/ftp
+				 fi;;
 
-			"q") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"q") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 			"Q") clear 
 				 exit;;
 			"r") clear 
 				 break;;
-			"u") echo $' \e[7mCASE SENSITIVE\e[0m';;
-			"R") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"u") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
+			"R") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 			esac
 			sleep 1
 		done;;
@@ -1045,24 +1305,84 @@ Include /etc/proftpd/conf.d/
 EOF
 		read -n1 -p $'  \e[5m\e[31mChoose:\e[0m '
 		case "$REPLY" in
-			"1") clear
+			"1") if grep -qs "$mountloc" /proc/mounts;
+				then
+				clear
 				 apt-get install postfix -y --force-yes
 				 apt-get install dovecot-imapd dovecot-pop3d -y --force-yes
 				 apt-get install squirrelmail -y --force-yes
 				 cp -r /usr/share/squirrelmail/ /var/www/mail
-				 chown www-data:www-data /var/www/mail;;
+				 chown www-data:www-data /var/www/mail
+				 else
+				 	clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  USB Repository \e[31mNot Mounted\e[0m, Exiting...'
+					sleep 0.50
+					fi;;
 
-			"U") clear
+			"U") if [ $(dpkg-query -W -f='${Status}' squirrelmail 2>/dev/null | grep -c "ok installed") -eq 0 ];
+				 then
+					clear
+					echo ""
+					echo $'  Squirrelmail \e[31mNot Installed\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Squirrelmail \e[31mNot Installed\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Squirrelmail \e[31mNot Installed\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Squirrelmail \e[31mNot Installed\e[0m, Exiting...'
+					sleep 1
+				 else
+				 clear
 				 apt-get purge postfix dovecot-* squirrelmail -y
-				 apt-get autoremove -y;;
+				 apt-get autoremove -y
+				 fi;;
 			
-			"2") clear
+			"2") if [ $(dpkg-query -W -f='${Status}' postfix dovecot-* squirrelmail 2>/dev/null | grep -c "ok installed") -eq 0 ];
+				 then
+					clear
+					echo ""
+					echo $'  Squirrelmail \e[31mNot Installed\e[0m, Exiting'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Squirrelmail \e[31mNot Installed\e[0m, Exiting.'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Squirrelmail \e[31mNot Installed\e[0m, Exiting..'
+					sleep 0.20
+					clear
+					echo ""
+					echo $'  Squirrelmail \e[31mNot Installed\e[0m, Exiting...'
+					sleep 1
+				 else
+				 clear
 				 echo ""
 				 echo "  MAIL SERVER - CREATE USER"
 				 echo "  -----------------------------------------------------------"
 				 read -p "  Enter Username: " user
 				 adduser ${user}
-				 adduser ${user} mail;;
+				 adduser ${user} mail
+				 fi;;
 			"3") clear
 				 echo ""
 				 echo "  MAIL SERVER - REMOVE USER"
@@ -1072,18 +1392,22 @@ EOF
 				 read -p $'  Enter the Username to \e[31mREMOVE\e[0m (ex. \e[31muser\e[0m): ' user
 				 deluser ${user}
 				 rm -r /home/$user;;
-			"q") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"q") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 			"Q") clear 
 				 exit;;
 			"r") clear 
 				 break;;
-			"u") echo $' \e[7mCASE SENSITIVE\e[0m';;
-			"R") echo $' \e[7mCASE SENSITIVE\e[0m';;
+			"u") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
+			"R") echo $' \e[7mCASE SENSITIVE\e[0m'
+				sleep 1;;
 			esac
 			sleep 0
 		done;;
 
-	"q") echo $' \e[7mCASE SENSITIVE\e[0m';;
+	"q") echo $' \e[7mCASE SENSITIVE\e[0m'
+		sleep 1;;
 	"Q") clear
 		 echo ""
 		 echo "  Thank you for using Auto Debian"
@@ -1093,3 +1417,4 @@ EOF
 	esac
 	sleep 0.050
 done
+
