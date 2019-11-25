@@ -9,9 +9,7 @@ if [ $(whoami) == "root" ];
 then
 while :
 do
-
 	clear
-
 if dpkg-query -W -f '${db:Status-Abbrev}\n' bind9 2>/dev/null | grep -q '^.i $';
 then
 	pkgbind=$'\e[32mInstalled\e[0m    '
@@ -1529,7 +1527,8 @@ EOF
 			else
 				echo "1" > /root/.ignore
 			fi;;
-
+	"I") echo $' \e[7mCASE SENSITIVE\e[0m'
+		sleep 1;;
 	"q") echo $' \e[7mCASE SENSITIVE\e[0m'
 		sleep 1;;
 	"Q") clear
