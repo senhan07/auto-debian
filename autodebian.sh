@@ -9,7 +9,9 @@ if [ $(whoami) == "root" ];
 then
 while :
 do
+
 	clear
+
 if dpkg-query -W -f '${db:Status-Abbrev}\n' bind9 2>/dev/null | grep -q '^.i $';
 then
 	pkgbind=$'\e[32mInstalled\e[0m    '
@@ -205,8 +207,14 @@ EOF
 				clear
 				lsblk
 				echo ""
+				echo "  Enter (C) to cancel"
 				echo "-----------------------------------------------"
+
+				echo ""
 				read -p $'  Enter the Drive Name (ex. \e[5m\e[31msdb1\e[0m): ' mount
+				if [[ $mount =~ "c"|"C" ]];then
+					break
+				else
 				if [[ $mount =~ ^[s][d][b-z][1-9]{1,1}$ ]];then
 					mount="$mount"
 				clear
@@ -232,7 +240,8 @@ deb [trusted=yes] file:///mnt/disk2 wheezy main contrib
 deb [trusted=yes] file:///mnt/disk3 wheezy main contrib" > /etc/apt/sources.list
 				apt-get update
 				break
-			fi;;
+			fi
+		fi;;
 
 			"2") if grep -qs "$mountloc" /proc/mounts;
 				then
