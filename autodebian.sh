@@ -4,7 +4,6 @@ echo "0" > /root/.ignore
 red="\033[00;31m"
 green="\033[00;32m"
 none="\033[0m"
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 if [ $(whoami) == "root" ];
 then
 while :
@@ -1568,26 +1567,5 @@ else
 	echo -e "  ${red}Need run as root user${none}, Exiting..."
 	sleep 1
 	echo ""
-	exit
-fi
-else
-	 clear
-	 echo ""
-	 echo -e "  ${red}Required${none} Run on SSH Connection, Exiting"
-	 sleep 0.35
-	 clear
-	 echo ""
-	 echo -e "  ${red}Required${none} Run on SSH Connection, Exiting."
-	 sleep 0.35
-	 clear
-	 echo ""
-	 echo -e "  ${red}Required${none} Run on SSH Connection, Exiting.."
-	 sleep 0.35
-	 clear
-	 echo ""
-	 echo -e "  ${red}Required${none} Run on SSH Connection, Exiting..."
-	 echo ""
-	 sleep 1
-	 tput rmcup
 	exit
 fi
