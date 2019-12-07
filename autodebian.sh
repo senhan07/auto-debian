@@ -93,20 +93,6 @@ up(){
 check(){
 	cat /root/.ignore
 }
-gateway(){
-	cat /etc/network/interfaces | grep gateway | awk '{print $2}'
-}
-if [[ -z $(gateway) ]];
-then
-	gateway="127.0.0.1"
-	gatewaylocal="localhost"
-else
-	gateway="$(gateway)"
-	gatewayip="$(gateway)"
-fi
-ping-gt(){
-	ping -c 1 $gateway | grep time= | awk '{print $7}' | cut -c 6-
-}
 echo -e "  1) USB Repository            $mountstat              ${red}Login as${none}   : ${green}$(user)${none}@${green}$(host)${none}"
 echo -e "                                                        ${red}OS${none}         : $(os)"
 echo -e "  2) DNS Server                $pkgbind            ${red}Kernel${none}     : $(kernel)"
@@ -115,7 +101,7 @@ echo -e "  3) Web Server                $pkgweb            ${red}Load Avg${none}
 echo -e "                                                        ${red}Memory${none}     : $(freemem)MiB / $(phymem)MiB"
 echo -e "  4) FTP Server                $pkgftp            ${red}Swap${none}       : $(freeswap)MiB / $(swap)MiB"
 echo -e "                                                        ${red}IP Address${none} : $(ipaddress)"
-echo -e "  5) Mail Server               $pkgmail            ${red}Gateway${none}    : ${gatewayip}${gatewaylocal} ($(ping-gt)ms) "
+echo -e "  5) Mail Server               $pkgmail"
 echo " "
 echo -e "  i) Ignore USB Repository     ${ignore}"
 echo ""
@@ -1442,7 +1428,7 @@ EOF
 					break
 					fi;;
 
-			"U") if [ $(dpkg-query -W -f='${Status}' squirrelmail 2>/dev/null | grep -c "ok installed") -eq 0 ];
+			"U") if [ $(dpkg-query -W -f='${Status}' squirrelmail dovecot-* postfix 2>/dev/null | grep -c "ok installed") -eq 0 ];
 				 then
 					clear
 					echo ""
