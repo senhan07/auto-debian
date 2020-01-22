@@ -475,8 +475,7 @@ zone ${double}$ip3.$ip2.$ip1.in-addr.arpa${double}{
 	  echo "domain $binddns
 search $binddns
 nameserver $ip1.$ip2.$ip3.$ip4
-nameserver 1.1.1.1
-nameserver 1.0.0.1" > /etc/resolv.conf
+" > /etc/resolv.conf
 		clear
       /etc/init.d/bind9 restart
       /etc/init.d/bind9 status
